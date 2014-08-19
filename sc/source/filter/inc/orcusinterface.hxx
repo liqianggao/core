@@ -285,6 +285,9 @@ private:
     ScDocument& mrDoc;
     ScOrcusAutoFilter maAutoFilter;
 
+    ScRange maRange;
+    OUString maName;
+
 public:
     ScOrcusTable(SCTAB nTab, ScDocument& rDoc);
     virtual ~ScOrcusTable();

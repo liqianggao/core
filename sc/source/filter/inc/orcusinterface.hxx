@@ -93,6 +93,8 @@ public:
 
 private:
     ScDocument& mrDoc;
+
+    ScRange maRange;
 };
 
 class ScOrcusSheet : public orcus::spreadsheet::iface::import_sheet

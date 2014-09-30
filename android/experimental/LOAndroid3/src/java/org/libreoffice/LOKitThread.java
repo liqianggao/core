@@ -75,6 +75,13 @@ public class LOKitThread extends Thread {
         boolean isReady = mTileProvider.isReady();
         if (isReady) {
             refresh();
+            LOKitShell.getMainHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    LibreOfficeMainActivity.mAppContext.hideProgressBar();
+                }
+            });
+
         }
         return isReady;
     }

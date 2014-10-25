@@ -251,6 +251,11 @@ void CTLayout::AdjustLayout( ImplLayoutArgs& rArgs )
         // - CoreText handles spaces specially (in particular at the text end)
         if( mnTrailingSpaceCount )
         {
+#if MACOSX_SDK_VERSION < 1070
+            // don't recreate line layout here, because this can lead to problems
+            // (looks like internal issues inside early CoreText versions)
+            mfTrailingSpaceWidth = CTLineGetTrailingWhitespaceWidth( mpCTLine );
+#else
             if(mfTrailingSpaceWidth <= 0.0)
             {
                 mfTrailingSpaceWidth = CTLineGetTrailingWhitespaceWidth( mpCTLine );
@@ -275,7 +280,7 @@ void CTLayout::AdjustLayout( ImplLayoutArgs& rArgs )
             SAL_INFO( "vcl.ct", "CTLineCreateWithAttributedString(\"" << GetOUString(aCFText) << "\") = " << mpCTLine );
             CFRelease( pAttrStr );
             CFRelease( aCFText );
-
+#endif
             // in RTL-layouts trailing spaces are leftmost
             // TODO: use BiDi-algorithm to thoroughly check this assumption
             if( rArgs.mnFlags & SAL_LAYOUT_BIDI_RTL)
@@ -283,9 +288,12 @@ void CTLayout::AdjustLayout( ImplLayoutArgs& rArgs )
                 mfBaseAdv = mfTrailingSpaceWidth;
             }
         }
+#if MACOSX_SDK_VERSION < 1070
+        CTLineRef pNewCTLine = CTLineCreateJustifiedLine( mpCTLine, 1.0, nPixelWidth - mfTrailingSpaceWidth );
+#else
         CTLineRef pNewCTLine = CTLineCreateJustifiedLine( mpCTLine, 1.0, nPixelWidth);
         SAL_INFO( "vcl.ct", "CTLineCreateJustifiedLine(" << mpCTLine << ",1.0," << nPixelWidth << ") = " << pNewCTLine );
-
+#endif
         if( !pNewCTLine )
         {
             // CTLineCreateJustifiedLine can and does fail
@@ -299,7 +307,11 @@ void CTLayout::AdjustLayout( ImplLayoutArgs& rArgs )
         SAL_INFO( "vcl.ct", "CFRelease(" << mpCTLine << ")" );
         CFRelease( mpCTLine );
         mpCTLine = pNewCTLine;
+#if MACOSX_SDK_VERSION < 1070
+        mfCachedWidth = nPixelWidth;
+#else
         mfCachedWidth = nPixelWidth + mfTrailingSpaceWidth;
+#endif
     }
 }
 
@@ -354,9 +366,13 @@ bool CTLayout::DrawTextSpecial( SalGraphics& rGraphics, sal_uInt32 flags ) const
                 CFDictionaryGetCount(mpTextStyle->GetStyleDict()),
                 mpTextStyle->GetStyleDict());
 
+#if MACOSX_SDK_VERSION < 1060
+        /* just don't do 'kCTStrokeWidthAttributeName' */
+#else
         int nStroke = 2;
         CFNumberRef rStroke = CFNumberCreate(NULL, kCFNumberSInt32Type, &nStroke);
         CFDictionarySetValue(styledict, kCTStrokeWidthAttributeName, rStroke);
+#endif
 
         CFAttributedStringRef pAttrStr = CFAttributedStringCreate(
                 NULL,

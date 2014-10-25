@@ -246,9 +246,8 @@ AquaSalMenu::AquaSalMenu( bool bMenuBar ) :
     if( ! mbMenuBar )
     {
         mpMenu = [[SalNSMenu alloc] initWithMenu: this];
-#if MACOSX_SDK_VERSION < 1060
-        objc_msgSend(mpMenu, @selector(setDelegate:), mpMenu);
-#else
+#if MACOSX_SDK_VERSION >= 1060
+        /* objc_msgSend(mpMenu, @selector(setDelegate:), mpMenu); */
         [mpMenu setDelegate: (id<NSMenuDelegate>)mpMenu];
 #endif
     }

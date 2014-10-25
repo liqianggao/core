@@ -37,11 +37,6 @@
 #include "osx/a11yfactory.h"
 #include "quartz/utils.h"
 
-#if MACOSX_SDK_VERSION < 1060
-#include "vcl/timer.hxx"
-#include "osx/saltimer.h"
-#endif
-
 #include "salwtype.hxx"
 
 #include "premac.h"
@@ -53,6 +48,11 @@
 // FIXME: move theming code to salnativewidgets.cxx
 #include <Carbon/Carbon.h>
 #include "postmac.h"
+
+#if MACOSX_SDK_VERSION < 1060
+#include "vcl/timer.hxx"
+#include "osx/saltimer.h"
+#endif
 
 using namespace std;
 
@@ -201,16 +201,16 @@ void AquaSalFrame::initWindowAndView()
         [mpNSWindow setAcceptsMouseMovedEvents: YES];
     [mpNSWindow setHasShadow: YES];
 
-#if MACOSX_SDK_VERSION < 1060
-    objc_msgSend(mpNSWindow, @selector(setDelegate:), mpNSWindow);
-#else
+#if MACOSX_SDK_VERSION >= 1060
+    /* objc_msgSend(mpNSWindow, @selector(setDelegate:), mpNSWindow); */
     [mpNSWindow setDelegate: static_cast<id<NSWindowDelegate> >(mpNSWindow)];
-#endif
 
     if( [mpNSWindow respondsToSelector: @selector(setRestorable:)])
     {
         objc_msgSend(mpNSWindow, @selector(setRestorable:), NO);
     }
+#endif
+
     const NSRect aRect = { NSZeroPoint, NSMakeSize( maGeometry.nWidth, maGeometry.nHeight )};
     mnTrackingRectTag = [mpNSView addTrackingRect: aRect owner: mpNSView userData: nil assumeInside: NO];
 

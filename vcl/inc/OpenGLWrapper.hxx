@@ -7,6 +7,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#ifndef OBJC_EXPORT
+#include <objc/objc-api.h>
+#endif
+
 #include "AppKit/NSOpenGLView.h"
 #include "AppKit/NSOpenGL.h"
 

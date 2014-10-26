@@ -25,6 +25,9 @@
 #include "osl/conditn.h"
 
 #ifdef MACOSX
+#ifndef OBJC_EXPORT
+#include <objc/objc-api.h>
+#endif
 #include "osx/osxvcltypes.h"
 #endif
 

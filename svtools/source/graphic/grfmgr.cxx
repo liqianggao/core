@@ -266,6 +266,7 @@ void GraphicObject::ImplAutoSwapIn()
                 mpMgr->ImplGraphicObjectWasSwappedIn( *this );
         }
     }
+    ImplAssignGraphicData();
 }
 
 bool GraphicObject::ImplGetCropParams( OutputDevice* pOut, Point& rPt, Size& rSz, const GraphicAttr* pAttr,

@@ -207,13 +207,13 @@ void GraphicManager::ImplCheckSizeOfSwappedInGraphics(const GraphicObject* pGrap
         pObj = maObjList[i];
         if (pObj->meType == GRAPHIC_BITMAP && !pObj->IsSwappedOut() && pObj->GetSizeBytes())
         {
+            size_t const nSize = pObj->GetSizeBytes();
+            nUsedSize += nSize;
             if( pObj != pGraphicToIgnore )
             {
                 aCandidates.push_back(pObj);
                 sizes.insert(std::make_pair(pObj, nSize));
             }
-            size_t const nSize = pObj->GetSizeBytes();
-            nUsedSize += nSize;
         }
     }
 

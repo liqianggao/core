@@ -40,6 +40,7 @@ class SC_DLLPUBLIC ScDocumentImport : boost::noncopyable
     ScDocumentImportImpl* mpImpl;
 
     ScDocumentImport(); // disabled
+    ScDocumentImport& operator=(const ScDocumentImport&); //disabled
 
 public:
     ScDocumentImport(ScDocument& rDoc);

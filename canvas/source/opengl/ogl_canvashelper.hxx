@@ -17,6 +17,7 @@
 
 #include <o3tl/cow_wrapper.hxx>
 #include <vector>
+#include "ogl_renderHelper.hxx"
 
 namespace oglcanvas
 {
@@ -230,6 +231,8 @@ namespace oglcanvas
             copied (used e.g. for CanvasBitmap)
          */
         RecordVectorT                                mpRecordedActions;
+
+        RenderHelper                                 mRenderHelper;
     };
 }
 

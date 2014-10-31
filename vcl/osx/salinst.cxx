@@ -762,7 +762,13 @@ SalObject* AquaSalInstance::CreateObject( SalFrame* pParent, SystemWindowData* p
     AquaSalObject *pObject = NULL;
 
     if ( pParent )
+    {
+#if defined(MACOSX) && MACOSX_SDK_VERSION < 1070
+        if (pWindowData && pWindowData->bOpenGL)
+            pWindowData->bLegacy = true;
+#endif
         pObject = new AquaSalObject( static_cast<AquaSalFrame*>(pParent), pWindowData );
+    }
 
     return pObject;
 }

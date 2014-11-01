@@ -625,6 +625,7 @@ bool SwGrfNode::SwapOut()
             // written graphics and links are removed here
             return maGrfObj.SwapOut( GRFMGR_AUTOSWAPSTREAM_LINK );
         }
+        else
         {
             return maGrfObj.SwapOut();
         }

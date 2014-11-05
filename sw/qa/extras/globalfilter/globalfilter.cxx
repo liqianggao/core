@@ -38,7 +38,6 @@ void Test::testSwappedOutImageExport()
         "Rich Text Format",
         "MS Word 97",
         "Office Open XML Text",
-        "HTML (StarWriter)",
     };
 
     for( size_t nFilter = 0; nFilter < aFilterNames.size(); ++nFilter )
@@ -82,17 +81,8 @@ void Test::testSwappedOutImageExport()
         {
             OUString sURL;
             XPropSet->getPropertyValue("GraphicURL") >>= sURL;
-            // HTML filter changes the name, but the real indicater here is the "null" URL.
-            if( aFilterNames[nFilter] == "HTML (StarWriter)" )
-            {
-                CPPUNIT_ASSERT_MESSAGE(
-                    sFailedMessage.getStr(), sURL != OUString("vnd.sun.star.GraphicObject:00000000000000000000000000000000"));
-            }
-            else
-            {
-                CPPUNIT_ASSERT_EQUAL_MESSAGE(
-                    sFailedMessage.getStr(), OUString("vnd.sun.star.GraphicObject:10000000000002620000017D9F4CD7A2"), sURL);
-            }
+            CPPUNIT_ASSERT_EQUAL_MESSAGE(
+                sFailedMessage.getStr(), OUString("vnd.sun.star.GraphicObject:10000000000002620000017D9F4CD7A2"), sURL);
         }
         // Check size
         {

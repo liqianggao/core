@@ -149,6 +149,9 @@ struct GLWindow
 
 class VCLOPENGL_DLLPUBLIC OpenGLContext
 {
+private:
+    OpenGLContext(const OpenGLContext&);
+    OpenGLContext& operator=(const OpenGLContext&);
 public:
     OpenGLContext();
     ~OpenGLContext();

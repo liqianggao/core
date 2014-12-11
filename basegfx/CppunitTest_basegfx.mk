@@ -25,6 +25,8 @@ $(eval $(call gb_CppunitTest_use_libraries,basegfx,\
 	$(gb_UWINAPI) \
 ))
 
+
+
 $(eval $(call gb_CppunitTest_add_exception_objects,basegfx,\
     basegfx/test/basegfx1d \
     basegfx/test/basegfx2d \
@@ -33,6 +35,7 @@ $(eval $(call gb_CppunitTest_add_exception_objects,basegfx,\
     basegfx/test/basegfxtools \
     basegfx/test/clipstate \
     basegfx/test/genericclipper \
+	basegfx/test/minimalCreateAreaGeometryTest \
 ))
 
 # vim: set noet sw=4 ts=4:

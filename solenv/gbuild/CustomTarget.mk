@@ -76,4 +76,31 @@ $(1) : $(2) $(if $(WITH_LANG),$(call gb_Executable_get_runtime_dependencies,ulfe
 
 endef
 
+#$(call gb_CustomTarget_token_hash,xmloff,tokenhash.inc,tokenhash.gperf)
+define gb_CustomTarget_token_hash
+$($(1)_INC)/$(2) : $($(1)_MISC)/$(3)
+	$$(call gb_Output_announce,$$(subst $(WORKDIR)/,,$$@),build,GPF,1)
+	$(GPERF) --compare-strncmp --switch=2 --readonly-tables $($(1)_MISC)/$(3) | sed -e 's/(char\*)0/(char\*)0, 0/g' | grep -v '^#line' > $($(1)_INC)/$(2)
+
+endef
+
+#$1=module,$2=headername,$3=name,$4,$5,$6=script
+define gb_CustomTarget_generate_tokens
+$($(1)_MISC)/$(3)ids.inc $($(1)_INC)/$(3)names.inc $(if $(4),$($(1)_MISC)/$(4)) $(if $(5),$($(1)_INC)/$(5)names.inc) : \
+    	$($(1)_GENHEADERPATH)/$(2).hxx
+	@touch $$@
+
+$($(1)_GENHEADERPATH)/$(2).hxx : $(if $(6),$($(1)_SRC)/$(6),$(SRCDIR)/solenv/bin/generate-tokens.pl) \
+		$($(1)_SRC)/$(2).txt $($(1)_SRC)/$(2).hxx.head $($(1)_SRC)/$(2).hxx.tail
+	$$(call gb_Output_announce,$$(subst $(WORKDIR)/,,$$@),build,PRL,1)
+	mkdir -p $($(1)_MISC) $($(1)_INC) $($(1)_GENHEADERPATH)
+	perl $(if $(6),$($(1)_SRC)/$(6),$(SRCDIR)/solenv/bin/generate-tokens.pl) $($(1)_SRC)/$(2).txt $($(1)_MISC)/$(3)ids.inc \
+		$($(1)_INC)/$(3)names.inc $(if $(4),$($(1)_MISC)/$(4)) \
+		$(if $(5),$($(1)_SRC)/$(5).txt $($(1)_INC)/$(5)names.inc) \
+	&& cat $($(1)_SRC)/$(2).hxx.head $($(1)_MISC)/$(3)ids.inc \
+		   $($(1)_SRC)/$(2).hxx.tail > $($(1)_GENHEADERPATH)/$(2).hxx \
+	&& touch $$@
+
+endef
+
 # vim: set noet sw=4:

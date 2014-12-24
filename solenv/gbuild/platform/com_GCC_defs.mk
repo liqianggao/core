@@ -86,11 +86,8 @@ endif
 
 
 ifeq ($(HAVE_GCC_VISIBILITY_FEATURE),TRUE)
+# note: don't add -fvisibility=hidden to flags
 gb_VISIBILITY_FLAGS := -DHAVE_GCC_VISIBILITY_FEATURE
-# If CC or CXX already include -fvisibility=hidden, don't duplicate it
-ifeq (,$(filter -fvisibility=hidden,$(CC)))
-gb_VISIBILITY_FLAGS += -fvisibility=hidden
-endif
 ifneq ($(HAVE_GCC_VISIBILITY_BROKEN),TRUE)
 gb_CXXFLAGS_COMMON += -fvisibility-inlines-hidden
 endif

@@ -89,7 +89,7 @@ $(eval $(call gb_Library_add_libs,vcl,\
     -framework IOKit \
     -F/System/Library/PrivateFrameworks \
     -framework CoreUI \
-    -lobjc \
+    $(if $(filter TRUE,$(COM_GCC_IS_CLANG)),-lobjc,-lobjc-gnu -L/usr/GNUstep/System/Library/Libraries -lgnustep-base -lgnustep-gui) \
 ))
 endif
 ifeq ($(OS),MACOSX)

@@ -17,6 +17,10 @@ $(eval $(call gb_Library_use_system_darwin_frameworks,AppleRemote,\
     IOKit \
 ))
 
+$(eval $(call gb_Library_add_libs,AppleRemote,\
+    $(if $(filter TRUE,$(COM_GCC_IS_CLANG)),-lobjc,-lobjc-gnu -L/usr/GNUstep/System/Library/Libraries -lgnustep-base -lgnustep-gui) \
+))
+
 $(eval $(call gb_Library_add_objcobjects,AppleRemote,\
     apple_remote/source/KeyspanFrontRowControl \
     apple_remote/source/AppleRemote \
